@@ -24,6 +24,10 @@ public class PCModel {
         return currentImage;
     }
 
+    public Image getOriginalImage() {
+        return originalImage;
+    }
+
     public void setCurrentImage(Image currentImage) {
         this.currentImage = currentImage;
     }

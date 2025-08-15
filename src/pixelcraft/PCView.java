@@ -15,7 +15,7 @@ public class PCView implements Observer {
     private final ImageView imageView;
 
     private final Button btnOpen = new Button("Open");
-    private final Button btnSave = new Button("Save (PNG)");
+    private final Button btnSave = new Button("Save");
     private final Button btnReset = new Button("Reset");
     private final Button btnGrayscale = new Button("Grayscale");
     private final Button btnRotate = new Button("Rotate");
@@ -30,6 +30,8 @@ public class PCView implements Observer {
         imageView.setFitHeight(600);
 
         buildUI();
+
+        setInitialDisabledState();
 
         Scene scene = new Scene(pane, 1000, 700);
         stage.setScene(scene);
@@ -73,7 +75,31 @@ public class PCView implements Observer {
     public Button getBtnRotate() { return btnRotate; }
     public Button getBtnBlur() { return btnBlur; }
 
+    private void setInitialDisabledState() {
+        btnSave.setDisable(true);
+        btnReset.setDisable(true);
+        btnGrayscale.setDisable(true);
+        btnRotate.setDisable(true);
+        btnBlur.setDisable(true);
+    }
+
     public void update(PCModel model, String message) {
         imageView.setImage(model.getImage());
+        updateButtonStates(model);
     }
+
+    private void updateButtonStates(PCModel model) {
+        boolean hasImage = model.getImage() != null;
+        boolean convertersEnabled = hasImage;
+        boolean canReset = model.isDirty();
+        boolean canSave = hasImage;
+
+        btnGrayscale.setDisable(!convertersEnabled);
+        btnRotate.setDisable(!convertersEnabled);
+        btnBlur.setDisable(!convertersEnabled);
+
+        btnReset.setDisable(!canReset);
+        btnSave.setDisable(!canSave);
+    }
+
 }

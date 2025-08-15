@@ -74,6 +74,7 @@ public class PCController {
         this.getView().getBtnSave().setOnAction(actionEvent -> onSave());
         this.getView().getBtnReset().setOnAction(actionEvent -> onReset());
 
+        this.getView().getBtnSave().setDisable(model.getImage() == null);
         this.getView().getBtnGrayscale().setOnAction(actionEvent -> onApply("grayscale"));
         this.getView().getBtnRotate().setOnAction(actionEvent -> onApply("rotate"));
         this.getView().getBtnBlur().setOnAction(actionEvent -> onApply("blur"));
