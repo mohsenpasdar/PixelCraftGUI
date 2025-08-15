@@ -14,8 +14,6 @@ public class PixelCraftGUI extends Application {
 
         PCController controller = new PCController(model, view);
         controller.installControllers();
-
-        stage.show();
     }
 
     public static void main(String[] args) {

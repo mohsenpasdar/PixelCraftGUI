@@ -1,8 +1,12 @@
 package pixelcraft;
 
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Separator;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class PCView implements Observer {
@@ -26,11 +30,37 @@ public class PCView implements Observer {
         imageView.setFitHeight(600);
 
         buildUI();
+
+        Scene scene = new Scene(pane, 1000, 700);
+        stage.setScene(scene);
+        stage.setTitle("PixelCraft GUI");
+        stage.show();
     }
 
     private void buildUI() {
+        VBox vBox = new VBox(10, btnOpen, btnSave, btnReset, new Separator(), btnGrayscale, btnRotate, btnBlur);
+        vBox.setPadding(new Insets(10));
+        vBox.setFillWidth(true);
+        vBox.setStyle("-fx-background-color: lightblue;");
 
+        btnOpen.setPrefWidth(120);
+        btnSave.setPrefWidth(120);
+        btnReset.setPrefWidth(120);
+        btnGrayscale.setPrefWidth(120);
+        btnRotate.setPrefWidth(120);
+        btnBlur.setPrefWidth(120);
+
+        btnOpen.setPadding(new Insets(8));
+        btnSave.setPadding(new Insets(8));
+        btnReset.setPadding(new Insets(8));
+        btnGrayscale.setPadding(new Insets(8));
+        btnRotate.setPadding(new Insets(8));
+        btnBlur.setPadding(new Insets(8));
+
+        pane.setLeft(vBox);
+        pane.setCenter(imageView);
     }
+    
 
     public Stage getStage() { return stage; }
     public BorderPane getPane() { return pane; }
