@@ -10,7 +10,10 @@ import java.awt.image.BufferedImage;
 public class Pixelate implements Converter {
 
     // Size of each pixelated block (can easily be changed)
-    private static final int BLOCK_SIZE = 3;
+    private static int BLOCK_SIZE = 3;
+    private static final int MIN_BLOCK = 3;
+
+    public static void resetCycle() { BLOCK_SIZE = MIN_BLOCK; }
 
     /**
      * Apply a pixelation effect to the input image.
@@ -32,6 +35,11 @@ public class Pixelate implements Converter {
                 colorBlock(i, j, writer, blockAvgColor, width, height);
             }
         }
+
+        int maxBlockAllowed = Math.max(MIN_BLOCK, Math.min(width, height) / 2);
+        int next = BLOCK_SIZE + 2;                 // 3,5,7,9,...
+        if (next > maxBlockAllowed) next = BLOCK_SIZE;
+        BLOCK_SIZE = next;
 
         return output;
     }
