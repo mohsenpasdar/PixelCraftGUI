@@ -52,7 +52,7 @@ public class FlipHorizontal implements Converter {
      */
     private void helperFlipRow(int column, int row, Image image, PixelWriter writer) {
         int width = (int) image.getWidth();
-        if (column >=  width / 2) {
+        if (column >=  width / 2 + 1) {
             return; // Base case: finished half the row
         }
         swapRowPixels(column, row, image, writer);

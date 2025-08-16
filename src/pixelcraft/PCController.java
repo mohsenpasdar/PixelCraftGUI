@@ -78,5 +78,12 @@ public class PCController {
         this.getView().getBtnGrayscale().setOnAction(actionEvent -> onApply("grayscale"));
         this.getView().getBtnRotate().setOnAction(actionEvent -> onApply("rotate"));
         this.getView().getBtnBlur().setOnAction(actionEvent -> onApply("blur"));
+        this.getView().getBtnFlipH().setOnAction(actionEvent -> onApply("flip_h"));
+        this.getView().getBtnFlipV().setOnAction(actionEvent -> onApply("flip_v"));
+        this.getView().getBtnMirror().setOnAction(actionEvent -> onApply("diag_mirror"));
+        this.getView().getBtnPixelate().setOnAction(actionEvent -> onApply("pixelate"));
+        this.getView().getBtnSepia().setOnAction(actionEvent -> onApply("sepia"));
+        this.getView().getBtnInvert().setOnAction(actionEvent -> onApply("invert"));
+
     }
 }

@@ -20,6 +20,13 @@ public class PCView implements Observer {
     private final Button btnGrayscale = new Button("Grayscale");
     private final Button btnRotate = new Button("Rotate");
     private final Button btnBlur = new Button("Blur");
+    private final Button btnFlipH = new Button("Flip Horizontal");
+    private final Button btnFlipV = new Button("Flip Vertical");
+    private final Button btnMirror = new Button("Mirror Diagonal");
+    private final Button btnPixelate = new Button("Pixelate");
+    private final Button btnSepia = new Button("Sepia");
+    private final Button btnInvert = new Button("Invert Colors");
+
 
     public PCView(Stage stage) {
         this.stage = stage;
@@ -40,7 +47,9 @@ public class PCView implements Observer {
     }
 
     private void buildUI() {
-        VBox vBox = new VBox(10, btnOpen, btnSave, btnReset, new Separator(), btnGrayscale, btnRotate, btnBlur);
+        VBox vBox = new VBox(10, btnOpen, btnSave, btnReset, new Separator(),
+                btnGrayscale, btnRotate, btnBlur, btnFlipH, btnFlipV, btnMirror,
+                btnPixelate, btnSepia, btnInvert);
         vBox.setPadding(new Insets(10));
         vBox.setFillWidth(true);
         vBox.setStyle("-fx-background-color: lightblue;");
@@ -51,6 +60,12 @@ public class PCView implements Observer {
         btnGrayscale.setPrefWidth(120);
         btnRotate.setPrefWidth(120);
         btnBlur.setPrefWidth(120);
+        btnFlipH.setPrefWidth(120);
+        btnFlipV.setPrefWidth(120);
+        btnMirror.setPrefWidth(120);
+        btnPixelate.setPrefWidth(120);
+        btnSepia.setPrefWidth(120);
+        btnInvert.setPrefWidth(120);
 
         btnOpen.setPadding(new Insets(8));
         btnSave.setPadding(new Insets(8));
@@ -58,6 +73,12 @@ public class PCView implements Observer {
         btnGrayscale.setPadding(new Insets(8));
         btnRotate.setPadding(new Insets(8));
         btnBlur.setPadding(new Insets(8));
+        btnFlipH.setPadding(new Insets(8));
+        btnFlipV.setPadding(new Insets(8));
+        btnMirror.setPadding(new Insets(8));
+        btnPixelate.setPadding(new Insets(8));
+        btnSepia.setPadding(new Insets(8));
+        btnInvert.setPadding(new Insets(8));
 
         pane.setLeft(vBox);
         pane.setCenter(imageView);
@@ -74,6 +95,12 @@ public class PCView implements Observer {
     public Button getBtnGrayscale() { return btnGrayscale; }
     public Button getBtnRotate() { return btnRotate; }
     public Button getBtnBlur() { return btnBlur; }
+    public Button getBtnFlipH() { return btnFlipH; }
+    public Button getBtnFlipV() { return btnFlipV; }
+    public Button getBtnMirror() { return btnMirror; }
+    public Button getBtnPixelate() { return btnPixelate; }
+    public Button getBtnSepia() { return btnSepia; }
+    public Button getBtnInvert() { return btnInvert; }
 
     private void setInitialDisabledState() {
         btnSave.setDisable(true);
@@ -81,6 +108,12 @@ public class PCView implements Observer {
         btnGrayscale.setDisable(true);
         btnRotate.setDisable(true);
         btnBlur.setDisable(true);
+        btnFlipH.setDisable(true);
+        btnFlipV.setDisable(true);
+        btnMirror.setDisable(true);
+        btnPixelate.setDisable(true);
+        btnSepia.setDisable(true);
+        btnInvert.setDisable(true);
     }
 
     public void update(PCModel model, String message) {
@@ -97,6 +130,12 @@ public class PCView implements Observer {
         btnGrayscale.setDisable(!convertersEnabled);
         btnRotate.setDisable(!convertersEnabled);
         btnBlur.setDisable(!convertersEnabled);
+        btnFlipH.setDisable(!convertersEnabled);
+        btnFlipV.setDisable(!convertersEnabled);
+        btnMirror.setDisable(!convertersEnabled);
+        btnPixelate.setDisable(!convertersEnabled);
+        btnSepia.setDisable(!convertersEnabled);
+        btnInvert.setDisable(!convertersEnabled);
 
         btnReset.setDisable(!canReset);
         btnSave.setDisable(!canSave);
