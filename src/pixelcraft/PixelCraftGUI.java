@@ -9,10 +9,10 @@ public class PixelCraftGUI extends Application {
     public void start(Stage stage) {
 
         PCModel model = new PCModel();
-        PCView view = new PCView(stage);
+        Observer view = new PCView(stage);
         model.addObserver(view);
 
-        PCController controller = new PCController(model, view);
+        PCController controller = new PCController(model, (PCView) view);
         controller.installControllers();
     }
 
