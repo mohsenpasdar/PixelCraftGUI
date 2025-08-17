@@ -9,6 +9,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -21,6 +22,8 @@ public class PCView implements Observer {
     private final Button btnOpen = new Button("Open");
     private final Button btnSave = new Button("Save");
     private final Button btnReset = new Button("Reset");
+    private final Button btnUndo = new Button("Undo");
+    private final Button btnRedo = new Button("Redo");
     private final Button btnGrayscale = new Button("Grayscale");
     private final Button btnRotate = new Button("Rotate");
     private final Button btnBlur = new Button("Blur");
@@ -61,7 +64,13 @@ public class PCView implements Observer {
         vBox.setFillWidth(true);
         vBox.getStyleClass().add("toolbox");
 
+        HBox hBox = new HBox(5, btnUndo, btnRedo);
+        hBox.setPadding(new Insets(10));
+//        vBox.setFillWidth(true);
+        hBox.getStyleClass().add("toolbox");
+
         pane.setLeft(vBox);
+        pane.setTop(hBox);
         pane.setCenter(imageView);
     }
     
@@ -73,6 +82,9 @@ public class PCView implements Observer {
     public Button getBtnOpen() { return btnOpen; }
     public Button getBtnSave() { return btnSave; }
     public Button getBtnReset() { return btnReset; }
+    public Button getBtnUndo() { return btnUndo; }
+    public Button getBtnRedo() { return btnRedo; }
+
     public Button getBtnGrayscale() { return btnGrayscale; }
     public Button getBtnRotate() { return btnRotate; }
     public Button getBtnBlur() { return btnBlur; }
@@ -86,6 +98,8 @@ public class PCView implements Observer {
     private void setInitialDisabledState() {
         btnSave.setDisable(true);
         btnReset.setDisable(true);
+        btnUndo.setDisable(true);
+        btnRedo.setDisable(true);
         btnGrayscale.setDisable(true);
         btnRotate.setDisable(true);
         btnBlur.setDisable(true);
@@ -108,6 +122,8 @@ public class PCView implements Observer {
         boolean convertersEnabled = hasImage;
         boolean canReset = model.isDirty();
         boolean canSave = hasImage;
+        boolean canUndo = !model.getUndoStack().isEmpty();
+        boolean canRedo = !model.getRedoStack().isEmpty();
 
         btnGrayscale.setDisable(!convertersEnabled);
         btnRotate.setDisable(!convertersEnabled);
@@ -121,6 +137,8 @@ public class PCView implements Observer {
 
         btnReset.setDisable(!canReset);
         btnSave.setDisable(!canSave);
+        btnUndo.setDisable(!canUndo);
+        btnRedo.setDisable(!canRedo);
     }
 
     public void update(PCModel model, String message) {

@@ -68,12 +68,22 @@ public class PCController {
         Pixelate.resetCycle();
     }
 
+    public void onUndo() {
+        this.model.undo();
+    }
+
+    public void onRedo() {
+        this.model.redo();
+    }
+
 
 
     public void installControllers() {
         this.getView().getBtnOpen().setOnAction(actionEvent -> onLoad());
         this.getView().getBtnSave().setOnAction(actionEvent -> onSave());
         this.getView().getBtnReset().setOnAction(actionEvent -> onReset());
+        this.getView().getBtnUndo().setOnAction(actionEvent -> onUndo());
+        this.getView().getBtnRedo().setOnAction(actionEvent -> onRedo());
 
         this.getView().getBtnSave().setDisable(model.getImage() == null);
         this.getView().getBtnGrayscale().setOnAction(actionEvent -> onApply("grayscale"));

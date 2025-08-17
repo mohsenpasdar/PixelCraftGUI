@@ -2,19 +2,24 @@ package pixelcraft;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
+import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 
 public class PCModel {
     private final ArrayList<Observer> observers;
     private Image originalImage;
     private Image currentImage;
     private boolean dirty = false;
+    private final Deque<HistoryEntry> undoStack = new ArrayDeque<>();
+    private final Deque<HistoryEntry> redoStack = new ArrayDeque<>();
 
     public PCModel() {
         observers = new ArrayList<>();
@@ -36,6 +41,14 @@ public class PCModel {
         return dirty;
     }
 
+    public Deque<HistoryEntry> getUndoStack() {
+        return undoStack;
+    }
+
+    public Deque<HistoryEntry> getRedoStack() {
+        return redoStack;
+    }
+
     public void addObserver(PCView view) {
         observers.add(view);
         this.notifyObservers("observer added");
@@ -55,9 +68,10 @@ public class PCModel {
                 notifyObservers("ERROR: decode");
                 return;
             }
-            this.currentImage = img;
-            this.originalImage = img;
+            this.originalImage = deepCopyImage(img);
+            this.currentImage = deepCopyImage(img);
             this.dirty = false;
+            this.clearHistory();
             notifyObservers("IMAGE_LOADED");
         } catch (IOException e) {
             System.err.println("I/O error: " + e.getMessage());
@@ -65,8 +79,17 @@ public class PCModel {
         }
     }
 
+    public void clearHistory() {
+        redoStack.clear();
+        undoStack.clear();
+    };
+
+
     public void resetToOriginal() {
         if (originalImage == null) return;
+        redoStack.clear();
+        HistoryEntry historyEntry = new HistoryEntry(deepCopyImage(currentImage), dirty);
+        undoStack.push(historyEntry);
         this.currentImage = originalImage;
         this.dirty = false;
         notifyObservers("IMAGE_RESET");
@@ -79,9 +102,43 @@ public class PCModel {
             notifyObservers("ERROR: convert");
             return;
         };
+        redoStack.clear();
+        HistoryEntry historyEntry = new HistoryEntry(deepCopyImage(currentImage), dirty);
+        undoStack.push(historyEntry);
         this.currentImage = next;
         this.dirty = true;
         notifyObservers("IMAGE_CHANGED");
+    }
+
+    private Image deepCopyImage(Image src) {
+        int w = (int) src.getWidth();
+        int h = (int) src.getHeight();
+
+        WritableImage output = new WritableImage(w, h);
+        PixelReader pr = src.getPixelReader();
+        PixelWriter pw = output.getPixelWriter();
+        pw.setPixels(0, 0, w, h, pr, 0, 0);
+        return output;
+    }
+
+    public void undo() {
+        if (undoStack.isEmpty()) return;
+        HistoryEntry historyEntry = new HistoryEntry(deepCopyImage(currentImage), dirty);
+        redoStack.push(historyEntry);
+        HistoryEntry e = undoStack.pop();
+        this.currentImage = e.getImage();
+        this.dirty = e.isDirty();
+        notifyObservers("undo");
+    }
+
+    public void redo() {
+        if (redoStack.isEmpty()) return;
+        HistoryEntry historyEntry = new HistoryEntry(deepCopyImage(currentImage), dirty);
+        undoStack.push(historyEntry);
+        HistoryEntry e = redoStack.pop();
+        this.currentImage = e.getImage();
+        this.dirty = e.isDirty();
+        notifyObservers("redo");
     }
 
     public void saveCurrentImage(String filePath) {
