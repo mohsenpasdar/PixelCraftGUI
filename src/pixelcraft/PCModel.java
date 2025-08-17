@@ -50,8 +50,8 @@ public class PCModel {
         return redoStack;
     }
 
-    public void addObserver(PCView view) {
-        observers.add(view);
+    public void addObserver(Observer observer) {
+        observers.add(observer);
         this.notifyObservers("observer added");
     }
 
