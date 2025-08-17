@@ -11,10 +11,12 @@ public class PCModel {
     private Image currentImage;
     private boolean dirty = false;
     private final HistoryManager historyManager;
+    private final Pixelate pixelate;
 
     public PCModel() {
         observers = new ArrayList<>();
         historyManager = new HistoryManager();
+        pixelate = new Pixelate();
     }
 
     public Image getImage() {
@@ -51,7 +53,7 @@ public class PCModel {
             this.currentImage = ImageIOService.deepCopyImage(img);
             this.dirty = false;
             this.clearHistory();
-            Pixelate.resetCycle();
+            pixelate.resetCycle();
             notifyObservers("IMAGE_LOADED");
         } catch (IOException e) {
             System.err.println("I/O error: " + e.getMessage());
@@ -69,13 +71,14 @@ public class PCModel {
         historyManager.recordState(ImageIOService.deepCopyImage(currentImage), dirty);
         this.currentImage = originalImage;
         this.dirty = false;
-        Pixelate.resetCycle();
+        pixelate.resetCycle();
         notifyObservers("IMAGE_RESET");
     }
 
     public void apply(Converter converter) {
         if (currentImage == null) return;
-        Image next = converter.convertImage(currentImage);
+        Converter toUse = (converter instanceof Pixelate) ? pixelate : converter;
+        Image next = toUse.convertImage(currentImage);
         if (next == null) {
             notifyObservers("ERROR: convert");
             return;
