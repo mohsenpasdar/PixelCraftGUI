@@ -6,7 +6,7 @@ import java.io.File;
 
 public class PCController {
     private final PCModel model;
-    public PCView view;
+    private final PCView view;
     private File lastDir = null;
 
     public PCController(PCModel model, PCView view) {
@@ -77,22 +77,22 @@ public class PCController {
 
 
     public void installControllers() {
-        this.getView().getBtnOpen().setOnAction(actionEvent -> onLoad());
-        this.getView().getBtnSave().setOnAction(actionEvent -> onSave());
-        this.getView().getBtnReset().setOnAction(actionEvent -> onReset());
-        this.getView().getBtnUndo().setOnAction(actionEvent -> onUndo());
-        this.getView().getBtnRedo().setOnAction(actionEvent -> onRedo());
+        view.getBtnOpen().setOnAction(actionEvent -> onLoad());
+        view.getBtnSave().setOnAction(actionEvent -> onSave());
+        view.getBtnReset().setOnAction(actionEvent -> onReset());
+        view.getBtnUndo().setOnAction(actionEvent -> onUndo());
+        view.getBtnRedo().setOnAction(actionEvent -> onRedo());
 
-        this.getView().getBtnSave().setDisable(model.getImage() == null);
-        this.getView().getBtnGrayscale().setOnAction(actionEvent -> onApply("grayscale"));
-        this.getView().getBtnRotate().setOnAction(actionEvent -> onApply("rotate"));
-        this.getView().getBtnBlur().setOnAction(actionEvent -> onApply("blur"));
-        this.getView().getBtnFlipH().setOnAction(actionEvent -> onApply("flip_h"));
-        this.getView().getBtnFlipV().setOnAction(actionEvent -> onApply("flip_v"));
-        this.getView().getBtnMirror().setOnAction(actionEvent -> onApply("diag_mirror"));
-        this.getView().getBtnPixelate().setOnAction(actionEvent -> onApply("pixelate"));
-        this.getView().getBtnSepia().setOnAction(actionEvent -> onApply("sepia"));
-        this.getView().getBtnInvert().setOnAction(actionEvent -> onApply("invert"));
+        view.getBtnSave().setDisable(model.getImage() == null);
+        view.getBtnGrayscale().setOnAction(actionEvent -> onApply("grayscale"));
+        view.getBtnRotate().setOnAction(actionEvent -> onApply("rotate"));
+        view.getBtnBlur().setOnAction(actionEvent -> onApply("blur"));
+        view.getBtnFlipH().setOnAction(actionEvent -> onApply("flip_h"));
+        view.getBtnFlipV().setOnAction(actionEvent -> onApply("flip_v"));
+        view.getBtnMirror().setOnAction(actionEvent -> onApply("diag_mirror"));
+        view.getBtnPixelate().setOnAction(actionEvent -> onApply("pixelate"));
+        view.getBtnSepia().setOnAction(actionEvent -> onApply("sepia"));
+        view.getBtnInvert().setOnAction(actionEvent -> onApply("invert"));
 
     }
 }
