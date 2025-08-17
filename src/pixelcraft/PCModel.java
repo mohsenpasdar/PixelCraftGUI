@@ -20,6 +20,7 @@ public class PCModel {
     private boolean dirty = false;
     private final Deque<HistoryEntry> undoStack = new ArrayDeque<>();
     private final Deque<HistoryEntry> redoStack = new ArrayDeque<>();
+    private final int historyLimit = 5;
 
     public PCModel() {
         observers = new ArrayList<>();
@@ -89,10 +90,17 @@ public class PCModel {
         if (originalImage == null) return;
         redoStack.clear();
         HistoryEntry historyEntry = new HistoryEntry(deepCopyImage(currentImage), dirty);
-        undoStack.push(historyEntry);
+        pushBounded(undoStack, historyEntry);
         this.currentImage = originalImage;
         this.dirty = false;
         notifyObservers("IMAGE_RESET");
+    }
+
+    private void pushBounded(Deque<HistoryEntry> stack, HistoryEntry entry) {
+        if (stack.size() >= historyLimit) {
+            stack.removeLast();
+        }
+        stack.push(entry);
     }
 
     public void apply(Converter converter) {
@@ -104,7 +112,7 @@ public class PCModel {
         };
         redoStack.clear();
         HistoryEntry historyEntry = new HistoryEntry(deepCopyImage(currentImage), dirty);
-        undoStack.push(historyEntry);
+        pushBounded(undoStack, historyEntry);
         this.currentImage = next;
         this.dirty = true;
         notifyObservers("IMAGE_CHANGED");
