@@ -11,6 +11,7 @@ public class PCModel {
     private Image currentImage;
     private boolean dirty = false;
     private final HistoryManager historyManager;
+    private int pixelBlockSize = Pixelate.MIN_BLOCK;
 
     public PCModel() {
         observers = new ArrayList<>();
@@ -51,7 +52,7 @@ public class PCModel {
             this.currentImage = ImageIOService.deepCopyImage(img);
             this.dirty = false;
             this.clearHistory();
-            Pixelate.resetCycle();
+            this.pixelBlockSize = Pixelate.MIN_BLOCK;
             notifyObservers("IMAGE_LOADED");
         } catch (IOException e) {
             System.err.println("I/O error: " + e.getMessage());
@@ -69,7 +70,7 @@ public class PCModel {
         historyManager.recordState(ImageIOService.deepCopyImage(currentImage), dirty);
         this.currentImage = originalImage;
         this.dirty = false;
-        Pixelate.resetCycle();
+        this.pixelBlockSize = Pixelate.MIN_BLOCK;
         notifyObservers("IMAGE_RESET");
     }
 
@@ -84,6 +85,14 @@ public class PCModel {
         historyManager.recordState(ImageIOService.deepCopyImage(currentImage), dirty);
         this.currentImage = next;
         this.dirty = true;
+        if (converter instanceof Pixelate) {
+            int width = (int) currentImage.getWidth();
+            int height = (int) currentImage.getHeight();
+            int maxBlockAllowed = Math.max(Pixelate.MIN_BLOCK, Math.min(width, height) / 2);
+            int nextSize = pixelBlockSize + 2; // 3,5,7,9,...
+            if (nextSize > maxBlockAllowed) nextSize = pixelBlockSize;
+            pixelBlockSize = nextSize;
+        }
         notifyObservers("IMAGE_CHANGED");
     }
 
@@ -112,5 +121,9 @@ public class PCModel {
             System.err.println("I/O error: " + e.getMessage());
             notifyObservers("ERROR: io");
         }
+    }
+
+    public int getPixelBlockSize() {
+        return pixelBlockSize;
     }
 }

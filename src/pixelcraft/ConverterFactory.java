@@ -11,7 +11,7 @@ public class ConverterFactory {
             case "flip_h" -> new FlipHorizontal();
             case "flip_v" -> new FlipVertical();
             case "sepia" -> new SepiaTone();
-            case "pixelate" -> new Pixelate();
+            case "pixelate" -> new Pixelate(Pixelate.MIN_BLOCK);
             case "invert" -> new InvertColors();
             case "diag_mirror" -> new DiagonalMirror();
             default -> throw new IllegalArgumentException("Unknown converter id: " + converterId);
