@@ -21,14 +21,6 @@ public class PCModel {
         return currentImage;
     }
 
-    public Image getOriginalImage() {
-        return originalImage;
-    }
-
-    public void setCurrentImage(Image currentImage) {
-        this.currentImage = currentImage;
-    }
-
     public boolean isDirty() {
         return dirty;
     }
@@ -71,10 +63,9 @@ public class PCModel {
         historyManager.clearHistory();
     }
 
-
     public void resetToOriginal() {
         if (originalImage == null) return;
-        historyManager.getRedoStack().clear();
+        getRedoStack().clear();
         historyManager.recordState(ImageIOService.deepCopyImage(currentImage), dirty);
         this.currentImage = originalImage;
         this.dirty = false;
@@ -89,7 +80,7 @@ public class PCModel {
             notifyObservers("ERROR: convert");
             return;
         };
-        historyManager.getRedoStack().clear();
+        getRedoStack().clear();
         historyManager.recordState(ImageIOService.deepCopyImage(currentImage), dirty);
         this.currentImage = next;
         this.dirty = true;
@@ -105,7 +96,7 @@ public class PCModel {
     }
 
     public void redo() {
-        if (historyManager.getRedoStack().isEmpty()) return;
+        if (getRedoStack().isEmpty()) return;
         HistoryEntry e = historyManager.redo(ImageIOService.deepCopyImage(currentImage), dirty);
         this.currentImage = e.getImage();
         this.dirty = e.isDirty();
