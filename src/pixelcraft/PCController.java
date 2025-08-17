@@ -39,7 +39,12 @@ public class PCController {
     }
 
     public void onApply(String selectedId) {
-        Converter c = ConverterFactory.createConverter(selectedId);
+        Converter c;
+        if ("pixelate".equals(selectedId)) {
+            c = new Pixelate(model.getPixelBlockSize());
+        } else {
+            c = ConverterFactory.createConverter(selectedId);
+        }
         this.model.apply(c);
     }
 
