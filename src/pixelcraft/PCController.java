@@ -36,7 +36,6 @@ public class PCController {
 
         lastDir = file.getParentFile();
         model.loadFromFile(file.getAbsolutePath());
-        Pixelate.resetCycle();
     }
 
     public void onApply(String selectedId) {
@@ -65,7 +64,6 @@ public class PCController {
 
     public void onReset() {
         this.model.resetToOriginal();
-        Pixelate.resetCycle();
     }
 
     public void onUndo() {

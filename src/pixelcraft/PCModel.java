@@ -73,6 +73,7 @@ public class PCModel {
             this.currentImage = deepCopyImage(img);
             this.dirty = false;
             this.clearHistory();
+            Pixelate.resetCycle();
             notifyObservers("IMAGE_LOADED");
         } catch (IOException e) {
             System.err.println("I/O error: " + e.getMessage());
@@ -93,6 +94,7 @@ public class PCModel {
         pushBounded(undoStack, historyEntry);
         this.currentImage = originalImage;
         this.dirty = false;
+        Pixelate.resetCycle();
         notifyObservers("IMAGE_RESET");
     }
 
