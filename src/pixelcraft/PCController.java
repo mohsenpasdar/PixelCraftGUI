@@ -1,6 +1,5 @@
 package pixelcraft;
 
-import javafx.event.EventHandler;
 import javafx.stage.FileChooser;
 
 import java.io.File;
@@ -22,8 +21,6 @@ public class PCController {
     public PCView getView() {
         return view;
     }
-
-
 
     public void onLoad() {
         FileChooser chooser = new FileChooser();
@@ -70,6 +67,8 @@ public class PCController {
         this.model.resetToOriginal();
         Pixelate.resetCycle();
     }
+
+
 
     public void installControllers() {
         this.getView().getBtnOpen().setOnAction(actionEvent -> onLoad());

@@ -1,0 +1,12 @@
+/* Style the left toolbox container (your VBox) */
+.toolbox {
+    -fx-background-color: lightblue;
+    -fx-padding: 10;
+    -fx-spacing: 10;
+}
+
+/* Style all buttons inside the toolbox */
+.toolbox .button {
+    -fx-pref-width: 120;
+    -fx-padding: 8;
+}
