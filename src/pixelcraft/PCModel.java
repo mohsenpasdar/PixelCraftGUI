@@ -35,6 +35,10 @@ public class PCModel {
         return historyManager.getRedoStack();
     }
 
+    public int getPixelBlockSize() {
+        return pixelBlockSize;
+    }
+
     public void addObserver(Observer observer) {
         observers.add(observer);
         this.notifyObservers("observer added");
@@ -133,7 +137,4 @@ public class PCModel {
         }
     }
 
-    public int getPixelBlockSize() {
-        return pixelBlockSize;
-    }
 }
