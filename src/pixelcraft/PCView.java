@@ -60,26 +60,6 @@ public class PCView implements Observer {
         stage.show();
     }
 
-    // Arrange buttons and image view.
-    private void buildUI() {
-        VBox vBox = new VBox(10, btnOpen, btnSave, btnReset, new Separator(),
-                btnGrayscale, btnRotate, btnBlur, btnFlipH, btnFlipV, btnMirror,
-                btnPixelate, btnSepia, btnInvert);
-        vBox.setPadding(new Insets(10));
-        vBox.setFillWidth(true);
-        vBox.getStyleClass().add("toolbox");
-
-        HBox hBox = new HBox(5, btnUndo, btnRedo);
-        hBox.setPadding(new Insets(10));
-        hBox.getStyleClass().add("toolbox");
-        hBox.setAlignment(Pos.CENTER);
-
-        pane.setLeft(vBox);
-        pane.setTop(hBox);
-        pane.setCenter(imageView);
-    }
-    
-
     public Stage getStage() { return stage; }
     public BorderPane getPane() { return pane; }
     public ImageView getImageView() { return imageView; }
@@ -99,6 +79,31 @@ public class PCView implements Observer {
     public Button getBtnPixelate() { return btnPixelate; }
     public Button getBtnSepia() { return btnSepia; }
     public Button getBtnInvert() { return btnInvert; }
+
+    // Observer callback: refresh the view.
+    public void update(PCModel model, String message) {
+        imageView.setImage(model.getImage());
+        updateButtonStates(model);
+    }
+
+    // Arrange buttons and image view.
+    private void buildUI() {
+        VBox vBox = new VBox(10, btnOpen, btnSave, btnReset, new Separator(),
+                btnGrayscale, btnRotate, btnBlur, btnFlipH, btnFlipV, btnMirror,
+                btnPixelate, btnSepia, btnInvert);
+        vBox.setPadding(new Insets(10));
+        vBox.setFillWidth(true);
+        vBox.getStyleClass().add("toolbox");
+
+        HBox hBox = new HBox(5, btnUndo, btnRedo);
+        hBox.setPadding(new Insets(10));
+        hBox.getStyleClass().add("toolbox");
+        hBox.setAlignment(Pos.CENTER);
+
+        pane.setLeft(vBox);
+        pane.setTop(hBox);
+        pane.setCenter(imageView);
+    }
 
     // Disable buttons until an image is loaded.
     private void setInitialDisabledState() {
@@ -149,11 +154,5 @@ public class PCView implements Observer {
         btnSave.setDisable(!canSave);
         btnUndo.setDisable(!canUndo);
         btnRedo.setDisable(!canRedo);
-    }
-
-    // Observer callback: refresh the view.
-    public void update(PCModel model, String message) {
-        imageView.setImage(model.getImage());
-        updateButtonStates(model);
     }
 }
