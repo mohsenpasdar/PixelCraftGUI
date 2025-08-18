@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Deque;
 
+// Stores image state and manages history.
 public class PCModel {
     private final ArrayList<Observer> observers;
     private Image originalImage;
@@ -39,12 +40,14 @@ public class PCModel {
         this.notifyObservers("observer added");
     }
 
+    // Inform observers that something changed.
     public void notifyObservers(String message) {
         for (Observer o: observers) {
             o.update(this, message);
         }
     }
 
+    // Load an image and reset model state.
     public void loadFromFile(String filePath) {
         try {
             Image img = ImageIOService.loadImage(filePath);
@@ -60,10 +63,12 @@ public class PCModel {
         }
     }
 
+    // Remove all undo/redo history.
     public void clearHistory() {
         historyManager.clearHistory();
     }
 
+    // Revert to the originally loaded image.
     public void resetToOriginal() {
         if (originalImage == null) return;
         getRedoStack().clear();
@@ -74,6 +79,7 @@ public class PCModel {
         notifyObservers("IMAGE_RESET");
     }
 
+    // Apply a converter and store the previous state.
     public void apply(Converter converter) {
         if (currentImage == null) return;
         Image next = converter.convertImage(currentImage);
@@ -86,6 +92,7 @@ public class PCModel {
         this.currentImage = next;
         this.dirty = true;
         if (converter instanceof Pixelate) {
+            // Increase block size on repeated pixelation, within bounds.
             int width = (int) currentImage.getWidth();
             int height = (int) currentImage.getHeight();
             int maxBlockAllowed = Math.max(Pixelate.MIN_BLOCK, Math.min(width, height) / 2);
@@ -96,6 +103,7 @@ public class PCModel {
         notifyObservers("IMAGE_CHANGED");
     }
 
+    // Restore the previous image from history.
     public void undo() {
         if (historyManager.getUndoStack().isEmpty()) return;
         HistoryEntry e = historyManager.undo(ImageIOService.deepCopyImage(currentImage), dirty);
@@ -104,6 +112,7 @@ public class PCModel {
         notifyObservers("undo");
     }
 
+    // Reapply the last undone change.
     public void redo() {
         if (getRedoStack().isEmpty()) return;
         HistoryEntry e = historyManager.redo(ImageIOService.deepCopyImage(currentImage), dirty);
@@ -112,6 +121,7 @@ public class PCModel {
         notifyObservers("redo");
     }
 
+    // Write the current image to disk.
     public void saveCurrentImage(String filePath) {
         if (currentImage == null) return;
         try {
