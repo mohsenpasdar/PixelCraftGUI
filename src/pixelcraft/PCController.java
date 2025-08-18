@@ -4,6 +4,7 @@ import javafx.stage.FileChooser;
 
 import java.io.File;
 
+// Handles user actions and updates the model.
 public class PCController {
     private final PCModel model;
     private final PCView view;
@@ -22,6 +23,7 @@ public class PCController {
         return view;
     }
 
+    // Let the user pick an image file and load it.
     public void onLoad() {
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Open Image");
@@ -38,6 +40,7 @@ public class PCController {
         model.loadFromFile(file.getAbsolutePath());
     }
 
+    // Create a converter based on button id and apply it.
     public void onApply(String selectedId) {
         Converter c;
         if ("pixelate".equals(selectedId)) {
@@ -48,6 +51,7 @@ public class PCController {
         this.model.apply(c);
     }
 
+    // Ask for a save location and write the image as PNG.
     public void onSave() {
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Save Image As");
@@ -67,20 +71,22 @@ public class PCController {
         }
     }
 
+    // Restore the original image.
     public void onReset() {
         this.model.resetToOriginal();
     }
 
+    // Undo the last change.
     public void onUndo() {
         this.model.undo();
     }
 
+    // Redo a previously undone change.
     public void onRedo() {
         this.model.redo();
     }
 
-
-
+    // Wire view buttons to controller methods.
     public void installControllers() {
         view.getBtnOpen().setOnAction(actionEvent -> onLoad());
         view.getBtnSave().setOnAction(actionEvent -> onSave());

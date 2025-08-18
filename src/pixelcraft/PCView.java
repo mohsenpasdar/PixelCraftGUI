@@ -14,6 +14,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+// JavaFX view: builds the interface and reacts to model changes.
 public class PCView implements Observer {
     private final Stage stage;
     private final BorderPane pane;
@@ -36,6 +37,7 @@ public class PCView implements Observer {
     private final Button btnInvert = new Button("Invert Colors");
 
 
+    // Create the UI elements and display the stage.
     public PCView(Stage stage) {
         this.stage = stage;
         this.pane = new BorderPane();
@@ -49,6 +51,7 @@ public class PCView implements Observer {
         imageView.setFitWidth(800); // optional sizing
         imageView.setFitHeight(600);
 
+        // Build the interface and show the window.
         buildUI();
         setInitialDisabledState();
         stage.setScene(scene);
@@ -57,6 +60,7 @@ public class PCView implements Observer {
         stage.show();
     }
 
+    // Arrange buttons and image view.
     private void buildUI() {
         VBox vBox = new VBox(10, btnOpen, btnSave, btnReset, new Separator(),
                 btnGrayscale, btnRotate, btnBlur, btnFlipH, btnFlipV, btnMirror,
@@ -96,6 +100,7 @@ public class PCView implements Observer {
     public Button getBtnSepia() { return btnSepia; }
     public Button getBtnInvert() { return btnInvert; }
 
+    // Disable buttons until an image is loaded.
     private void setInitialDisabledState() {
         btnSave.setDisable(true);
         btnReset.setDisable(true);
@@ -112,6 +117,7 @@ public class PCView implements Observer {
         btnInvert.setDisable(true);
     }
 
+    // Keyboard shortcuts for common commands.
     private void setupAccelerators() {
         scene.getAccelerators().put(new KeyCodeCombination(KeyCode.O, KeyCombination.SHORTCUT_DOWN), () -> btnOpen.fire());
         scene.getAccelerators().put(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN), () -> btnSave.fire());
@@ -120,6 +126,7 @@ public class PCView implements Observer {
         scene.getAccelerators().put(new KeyCodeCombination(KeyCode.Y, KeyCombination.SHORTCUT_DOWN), () -> btnRedo.fire());
     }
 
+    // Enable or disable controls based on model state.
     private void updateButtonStates(PCModel model) {
         boolean hasImage = model.getImage() != null;
         boolean convertersEnabled = hasImage;
@@ -144,6 +151,7 @@ public class PCView implements Observer {
         btnRedo.setDisable(!canRedo);
     }
 
+    // Observer callback: refresh the view.
     public void update(PCModel model, String message) {
         imageView.setImage(model.getImage());
         updateButtonStates(model);

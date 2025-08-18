@@ -2,6 +2,7 @@ package pixelcraft;
 
 import javafx.scene.image.Image;
 
+// Snapshot of an image along with its dirty state.
 public class HistoryEntry {
     private final Image image;
     private final boolean dirty;

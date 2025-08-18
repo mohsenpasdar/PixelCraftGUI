@@ -11,7 +11,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+// Utility methods for reading, writing and copying images.
 public class ImageIOService {
+    // Read an image from disk.
     public static Image loadImage(String filePath) throws IOException {
         try (FileInputStream inputFile = new FileInputStream(new File(filePath))) {
             Image img = new Image(inputFile);
@@ -22,6 +24,7 @@ public class ImageIOService {
         }
     }
 
+    // Write an image as PNG.
     public static void saveImage(Image image, String filePath) throws IOException {
         int width = (int) image.getWidth();
         int height = (int) image.getHeight();
@@ -36,6 +39,7 @@ public class ImageIOService {
         ImageIO.write(bufferedImage, "png", new File(filePath));
     }
 
+    // Create a detached copy of the image.
     public static Image deepCopyImage(Image src) {
         int w = (int) src.getWidth();
         int h = (int) src.getHeight();
