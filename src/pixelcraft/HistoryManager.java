@@ -7,7 +7,7 @@ import java.util.Deque;
 public class HistoryManager {
     private final Deque<HistoryEntry> undoStack = new ArrayDeque<>();
     private final Deque<HistoryEntry> redoStack = new ArrayDeque<>();
-    private final int historyLimit = 5;
+    private final int historyLimit = 20;
 
     public Deque<HistoryEntry> getUndoStack() {
         return undoStack;

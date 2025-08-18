@@ -1,6 +1,7 @@
 package pixelcraft;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Separator;
@@ -66,8 +67,8 @@ public class PCView implements Observer {
 
         HBox hBox = new HBox(5, btnUndo, btnRedo);
         hBox.setPadding(new Insets(10));
-//        vBox.setFillWidth(true);
         hBox.getStyleClass().add("toolbox");
+        hBox.setAlignment(Pos.CENTER);
 
         pane.setLeft(vBox);
         pane.setTop(hBox);

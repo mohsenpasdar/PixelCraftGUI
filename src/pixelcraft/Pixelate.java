@@ -7,11 +7,13 @@ import javafx.scene.image.WritableImage;
 
 public class Pixelate implements Converter {
 
-    // Size of each pixelated block (can easily be changed)
-    private static int BLOCK_SIZE = 3;
-    private static final int MIN_BLOCK = 3;
+    // Size of each pixelated block
+    private final int blockSize;
+    public static final int MIN_BLOCK = 3;
 
-    public static void resetCycle() { BLOCK_SIZE = MIN_BLOCK; }
+    public Pixelate(int blockSize) {
+        this.blockSize = blockSize;
+    }
 
     /**
      * Apply a pixelation effect to the input image.
@@ -26,24 +28,19 @@ public class Pixelate implements Converter {
         WritableImage output = new WritableImage(width, height);
         PixelWriter writer = output.getPixelWriter();
 
-        // Loop through image in blocks of BLOCK_SIZE
-        for (int i = 0; i < width; i = i + BLOCK_SIZE) {
-            for (int j = 0; j < height; j = j + BLOCK_SIZE) {
+        // Loop through image in blocks of blockSize
+        for (int i = 0; i < width; i = i + blockSize) {
+            for (int j = 0; j < height; j = j + blockSize) {
                 int blockAvgColor = avgBlock(i, j, input);
                 colorBlock(i, j, writer, blockAvgColor, width, height);
             }
         }
 
-        int maxBlockAllowed = Math.max(MIN_BLOCK, Math.min(width, height) / 2);
-        int next = BLOCK_SIZE + 2;                 // 3,5,7,9,...
-        if (next > maxBlockAllowed) next = BLOCK_SIZE;
-        BLOCK_SIZE = next;
-
         return output;
     }
 
     /**
-     * Calculate the average color of a BLOCK_SIZE x BLOCK_SIZE block.
+     * Calculate the average color of a blockSize x blockSize block.
      *
      * @param x starting x-coordinate of the block
      * @param y starting y-coordinate of the block
@@ -61,8 +58,8 @@ public class Pixelate implements Converter {
         int sumBlue = 0;
 
         // Calculate the sum of colors within the block
-        for (int i = x; i < x + BLOCK_SIZE; i++) {
-            for (int j = y; j < y + BLOCK_SIZE; j++) {
+        for (int i = x; i < x + blockSize; i++) {
+            for (int j = y; j < y + blockSize; j++) {
                 int col = Math.min(i, width - 1);
                 int row = Math.min(j, height - 1);
                 int pixelInt = reader.getArgb(col, row);
@@ -74,7 +71,7 @@ public class Pixelate implements Converter {
             }
         }
 
-        int pixelsCount = BLOCK_SIZE * BLOCK_SIZE;
+        int pixelsCount = blockSize * blockSize;
 
         // Return the average color of the block
         ARGB newPixelARGB = new ARGB(sumAlpha / pixelsCount, sumRed / pixelsCount, sumGreen / pixelsCount, sumBlue / pixelsCount);
@@ -82,7 +79,7 @@ public class Pixelate implements Converter {
     }
 
     /**
-     * Fill a BLOCK_SIZE x BLOCK_SIZE block in the new image with the specified color.
+     * Fill a blockSize x blockSize block in the new image with the specified color.
      *
      * @param x starting x-coordinate of the block
      * @param y starting y-coordinate of the block
@@ -93,8 +90,8 @@ public class Pixelate implements Converter {
      */
     private void colorBlock(int x, int y, PixelWriter writer, int pixelInt, int width, int height) {
         // Set each pixel in the block to the average color
-        for (int i = x; i < x + BLOCK_SIZE; i++) {
-            for (int j = y; j < y + BLOCK_SIZE; j++) {
+        for (int i = x; i < x + blockSize; i++) {
+            for (int j = y; j < y + blockSize; j++) {
                 int col = Math.min(i, width - 1);
                 int row = Math.min(j, height - 1);
                 writer.setArgb(col, row, pixelInt);
